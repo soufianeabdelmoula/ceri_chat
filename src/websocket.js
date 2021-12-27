@@ -13,7 +13,7 @@ constructor(){
 }
 //connection avec djangoo server
     connect(){
-        const path = 'ws://127.0.0.1:8000/ws/chat/room';
+        const path = 'ws://127.0.0.1:8000/ws/chat/room/';
         this.socketRef =  new WebSocket(path);
         this.socketRef.onopen = () => {
             console.log("WebSocket open");
@@ -21,11 +21,14 @@ constructor(){
           this.socketRef.onmessage = e => {
             this.socketNewMessage(e.data);
           };
+          this.socketNewMessage(JSON.stringify({
+            command: 'fetch_messages'
+          }))
           this.socketRef.onerror = e => {
             console.log(e.message);
           };
           this.socketRef.onclose = () => {
-            console.log("WebSocket closed let's reopen");
+            console.log(" oupss WebSocket closed let's reopen");
             this.connect();
           };
     }

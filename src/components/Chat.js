@@ -47,6 +47,24 @@ class Chat extends React.Component {
         });
     }
 
+    sendMessageHandler =e => {
+        e.preventDefault();
+        const messageObject = {
+            from: 'admin',
+            content: this.state.message
+        }
+        WebSocketInstance.newChatMessage(messageObject);
+        this.setState({
+            message: ''
+        })
+    }
+
+    messageChangeHandler = event => {
+        this.setState({
+            message: event.target.value
+        });
+    }
+
     renderMessages = messages => {
         const currentUser = 'admin';
         return (message => (
@@ -58,6 +76,8 @@ class Chat extends React.Component {
               src="http://emilcarlsson.se/assets/mikeross.png"/>
             <p>
               {message.content}
+              <br />
+          <small>{this.renderTimestamp(message.timestamp)}</small>
             </p>
           </li>
         ));
@@ -150,13 +170,19 @@ class Chat extends React.Component {
                         </ul>
                     </div>
                     <div className="message-input">
-                        <div className="wrap">
-                            <input id="chat-message-input" type="text" placecholder="ecriture"></input>
+                       <form onSubmit={this.sendMessageHandler}>
+                       <div className="wrap">
+                            <input 
+                            onChange={this.messageChangeHandler}
+                            value={this.state.message}
+                            id="chat-message-input"
+                            type="text" placecholder="ecriture"></input>
                             <i className="fa fa-paperclip attachement" aria-hidden="true"></i>
                             <button id="chat-message-submit" className="submit">
                                 <p className="fa fa-paper-plane" aria-hidden="true"></p>
                             </button>
                         </div>
+                       </form>
                     </div>
                 </div>
                 </div>
